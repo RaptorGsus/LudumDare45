@@ -240,6 +240,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputField: {fileID: 1743294398}
   consoleParent: {fileID: 2132989653}
+  player: {fileID: 371748427}
   consoleLitItemPrefab: {fileID: 3540722598567788352, guid: adf74c8aa2b16134e86a3923302b771a,
     type: 3}
 --- !u!1 &133400249
@@ -437,7 +438,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 371748426}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c0584d92e9f415c469d68bc42f258500, type: 3}
+  m_Script: {fileID: 11500000, guid: a7e12872a0e8b694ab94406621d36e45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &371748428
