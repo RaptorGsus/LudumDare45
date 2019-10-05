@@ -54,6 +54,7 @@ public class TextAdventureConsole : MonoBehaviour
 
     private void ParseLine(string input)
     {
+        
         WriteLine("Nice Input!");
     }
 

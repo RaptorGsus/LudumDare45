@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class TA_Room : MonoBehaviour
 {
+    public Vector2 History { get { return roomPosition; } }
+    [SerializeField]
+    private Vector2 roomPosition;
+    
+    
     // Start is called before the first frame update
     void Start()
     {
