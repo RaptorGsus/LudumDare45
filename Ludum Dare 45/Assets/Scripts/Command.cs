@@ -4,17 +4,18 @@ using System.Collections.Generic;
 /// This Class represents a Command in the Text Adventure Interface.
 /// </summary>
 public class Command {
+   
     struct CommandConfig {
-        public CommandType type;
+        public InteractionType type;
         public string[] aliases;
 
-        public CommandConfig(CommandType t, string[] a) {
+        public CommandConfig(InteractionType t, string[] a) {
             type = t;
             aliases = a;
         }
     }
 
-    public enum CommandType {
+    public enum InteractionType {
         Take,
         Drop,
         Look,
@@ -27,10 +28,10 @@ public class Command {
         Invalid
     }
 
-    public CommandType type;
+    public InteractionType type;
     public string[] args = new string[0];
 
-    private static Dictionary<string, CommandType> commandMap;
+    private static Dictionary<string, InteractionType> commandMap;
 
     /// <summary>
     /// Parses a <see cref="Command"/> object from a string.
@@ -41,10 +42,10 @@ public class Command {
         if (commandMap == null) IndexCommands();
 
         Command value = new Command();
-        value.type = CommandType.Invalid;
+        value.type = InteractionType.Invalid;
         var args = input.Split(new char[] { ' ' });
 
-        CommandType type = CommandType.Invalid;
+        InteractionType type = InteractionType.Invalid;
         if (commandMap.TryGetValue(args[0].Trim().ToLower(), out type)) {
             value.type = type;
             if(args.Length > 1){
@@ -60,45 +61,46 @@ public class Command {
     /// Index all commands 
     /// </summary>
     private static void IndexCommands() {
-        commandMap = new Dictionary<string, CommandType>();
+        commandMap = new Dictionary<string, InteractionType>();
         CommandConfig[] commandArray = {
-            new CommandConfig(CommandType.Take,
+            new CommandConfig(InteractionType.Take,
             new string[] {
             "take",
             "grab",
             }),
-            new CommandConfig(CommandType.Drop,
+            new CommandConfig(InteractionType.Drop,
             new string[] {
             "drop",
             "discard"
             }),
-            new CommandConfig(CommandType.Look,
+            new CommandConfig(InteractionType.Look,
             new string[] {
             "look",
             "watch",
             "eye"
             }),
-            new CommandConfig(CommandType.Move,
+            new CommandConfig(InteractionType.Move,
             new string[] {
             "move",
             "walk",
-            "run"
+            "run",
+            "go"
             }),
-            new CommandConfig(CommandType.Read,
+            new CommandConfig(InteractionType.Read,
             new string[] {
             "read"
             }),
-            new CommandConfig(CommandType.Use,
+            new CommandConfig(InteractionType.Use,
             new string[] {
             "use",
             "interact"
             }),
-            new CommandConfig(CommandType.Open,
+            new CommandConfig(InteractionType.Open,
             new string[] {
             "open",
             "unlock",
             }),
-            new CommandConfig(CommandType.Attack,
+            new CommandConfig(InteractionType.Attack,
             new string[] {
             "attack",
             "hit",

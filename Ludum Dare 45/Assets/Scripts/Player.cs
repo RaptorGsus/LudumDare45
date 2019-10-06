@@ -1,62 +1,132 @@
-using System.Linq;
 using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using TextAdventure;
 using UnityEngine;
 
 public class Player : MonoBehaviour {
 
+    public TMPro.TextMeshProUGUI debug;
+
+    private static Room room;
+    public static Room CurrentRoom {
+        get { return room; }
+        set { room = value; }
+    }
+
+    private void Update() {
+        if (debug) {
+            debug.text = "Room\n" + String.Join(",", new int[] { CurrentRoom.Position.x, CurrentRoom.Position.y });
+        }
+    }
+
+    public List<Item> Inventory { get { return new List<Item>(GetComponentsInChildren<Item>()); } }
+
+    private void Start() {
+        room = FindObjectOfType<Dungeon>().GetRoomAt(0, 0);
+    }
+
     public string DoCommand(Command com) {
         string message = "";
+
         switch (com.type) {
-            case Command.CommandType.Take:
-                message = "Command - " + com.type.ToString() + Environment.NewLine +
-                "Arg: ";
-                foreach(string arg in com.args ) { message += " " + arg;}
+            case Command.InteractionType.Take:
+                if (com.args.Length == 0) { message = GetTakeNoArgs(); } else {
+                    message = CurrentRoom.PassCommand(com);
+                }
                 break;
-            case Command.CommandType.Drop:
-                message = "Command - " + com.type.ToString() + Environment.NewLine +
-                "Arg: ";
-                foreach(string arg in com.args ) { message += " " + arg;}
+            case Command.InteractionType.Drop:
+                if(Inventory.Count == 0){ 
+                    message = "You aren't holding anything";
+                    break;
+                }
+                foreach (Item item in Inventory) {
+                    if (com.args.Contains(item.GetInteractable().Name, StringComparer.OrdinalIgnoreCase)) {
+                        item.transform.parent = CurrentRoom.transform;
+                        message = "Dropped " + item.GetInteractable().Name;
+                        break;
+                    }
+                    message = "You aren't holding " + com.args[0];
+                }
                 break;
-            case Command.CommandType.Look:
-                message = "Command - " + com.type.ToString() + Environment.NewLine +
-                "Arg: ";
-                foreach(string arg in com.args ) { message += " " + arg;}
+            case Command.InteractionType.Look:
+                if (com.args.Length == 0 || com.args.Contains("room", StringComparer.OrdinalIgnoreCase)) {
+                    message = CurrentRoom.Interactables.Count() <= 1 ?
+                        CurrentRoom.description + "\nThe Room is empty." :
+                        CurrentRoom.description + "\nThe Room contains the following\n +" +
+                        String.Join("\n +", CurrentRoom.ListInteractables());
+                } else {
+                    message = CurrentRoom.PassCommand(com);
+                }
                 break;
-            case Command.CommandType.Move:
-                message = "Command - " + com.type.ToString() + Environment.NewLine +
-                "Arg: ";
-                foreach(string arg in com.args ) { message += " " + arg;}
+            case Command.InteractionType.Move:
+                if (com.args.Length == 0) {
+                    var validDirs = CurrentRoom.ListDoors();
+                    message = "There are " + validDirs.Length + " Doors in this room\n +" + String.Join("\n +", validDirs);
+                } else {
+                    message = CurrentRoom.PassCommand(com);
+                }
                 break;
-            case Command.CommandType.Read:
-                message = "Command - " + com.type.ToString() + Environment.NewLine +
-                "Arg: ";
-                foreach(string arg in com.args ) { message += " " + arg;}
+            case Command.InteractionType.Read:
+                if (com.args.Length == 0) {
+                    message = GetReadNoArgs();
+                } else {
+                    //CurrentRoom.MatchInteraction(com);
+                }
                 break;
-            case Command.CommandType.Use:
-                message = "Command - " + com.type.ToString() + Environment.NewLine +
-                "Arg: ";
-                foreach(string arg in com.args ) { message += " " + arg;}
+            case Command.InteractionType.Use:
+                if (com.args.Length == 0) {
+                    message = "Typically, you use an object, but don't let me tell you how to live your life...";
+                } else {
+                    //CurrentRoom.MatchInteraction(com);
+                }
                 break;
-            case Command.CommandType.Open:
-                message = "Command - " + com.type.ToString() + Environment.NewLine +
-                "Arg: ";
-                foreach(string arg in com.args ) { message += " " + arg;}
+            case Command.InteractionType.Open:
+                if (com.args.Length == 0) {
+                    message = "What do you want to open?";
+                } else {
+                    //CurrentRoom.MatchInteraction(com);
+                }
                 break;
-            case Command.CommandType.Attack:
-                message = "Command - " + com.type.ToString() + Environment.NewLine +
-                "Arg: ";
-                foreach(string arg in com.args ) { message += " " + arg;}
+            case Command.InteractionType.Attack:
+                if (com.args.Length == 0) {
+                    message = "You swing your sword wildly making everyone *very* uncomfortable.";
+                } else {
+                    //CurrentRoom.MatchInteraction(com);
+                }
                 break;
-            case Command.CommandType.Invalid:
-                message = "Command - " + com.type.ToString() + Environment.NewLine +
-                "Arg: ";
-                foreach(string arg in com.args ) { message += " " + arg;}
+            case Command.InteractionType.Invalid:
+                message = ("You can't do that.");
                 break;
             default:
-                message = com.type.ToString() + " is not a valid command.";
+                message = "Unk.";
                 break;
         }
 
         return message;
+    }
+
+    private static string GetReadNoArgs() {
+        System.Random r = new System.Random();
+        string message;
+        var responses = new List<string> {
+            "You are reading right this very second!",
+            "Yes.",
+            "You read the room... it's awkward."
+        };
+        message = responses[r.Next(0, responses.Count)];
+        return message;
+    }
+
+    private string GetTakeNoArgs() {
+        System.Random r = new System.Random();
+        var responses = new List<string> {
+            "You take in the view",
+            "You take... A deep breath",
+            "You grab at the air... You look stupid.",
+            "You take a moment to self-reflect..."
+        };
+        return responses[r.Next(0, responses.Count)];
     }
 }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class TextAdventureConsole : MonoBehaviour {
+public class TextAdventureConsole : Singleton<TextAdventureConsole> {
     [Header("Objects")]
     public TMP_InputField inputField;
     public Transform consoleParent;
@@ -58,7 +58,6 @@ public class TextAdventureConsole : MonoBehaviour {
         history.Add(newLine);
         var go = Instantiate(consoleLitItemPrefab, consoleParent).GetComponent<ConsoleListItem>().InitItem(newLine);
         consoleListItems.Add(go);
-
     }
 
     private void ForceFocus() {
@@ -69,7 +68,6 @@ public class TextAdventureConsole : MonoBehaviour {
 
     public void Clear() {
         inputField.text = "";
-
     }
 
 }
