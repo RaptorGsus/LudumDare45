@@ -8,7 +8,7 @@ public class TextAdventureConsole : Singleton<TextAdventureConsole> {
     [Header("Objects")]
     public TMP_InputField inputField;
     public Transform consoleParent;
-    public Player player;
+    public TextAdventure.Player player;
 
     [Header("Prefabs")]
     public GameObject consoleLitItemPrefab;
