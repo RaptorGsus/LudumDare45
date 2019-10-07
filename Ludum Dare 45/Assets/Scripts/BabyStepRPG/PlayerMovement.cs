@@ -22,8 +22,8 @@ public class PlayerMovement : MonoBehaviour
         Vector2 position = rigidbody2d.position;
         position.x = position.x + speed * horizontal * Time.deltaTime;
         position.y = position.y + speed * vertical * Time.deltaTime;
-        rigidbody2d.MovePosition(position);
-
-        
+        rigidbody2d.MovePosition(position);        
     }
+
+    
 }

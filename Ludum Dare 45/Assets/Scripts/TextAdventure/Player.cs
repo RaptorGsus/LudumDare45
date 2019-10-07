@@ -16,16 +16,16 @@ namespace TextAdventure {
             set { room = value; }
         }
 
-        private void Update() {
-            if (debug) {
-                debug.text = "Room\n" + String.Join(",", new int[] { CurrentRoom.Position.x, CurrentRoom.Position.y });
-            }
-        }
-
         public List<Item> Inventory { get { return new List<Item>(GetComponentsInChildren<Item>()); } }
 
         private void Start() {
             room = FindObjectOfType<Dungeon>().GetRoomAt(0, 0);
+        }
+
+        private void Update() {
+            if (debug) {
+                debug.text = "Room\n" + String.Join(",", new int[] { CurrentRoom.Position.x, CurrentRoom.Position.y });
+            }
         }
 
         public string DoCommand(Command com) {
@@ -35,6 +35,10 @@ namespace TextAdventure {
                 case Command.InteractionType.Take:
                     if (!UnlockManager.Instance.Take) {
                         message = "Unknown Command 405";
+                        break;
+                    }
+                    if(!UnlockManager.Instance.Backpack && Inventory.Count > 0) {
+                        message = "Your hands are full... if only there was a way to carry more objects...";
                         break;
                     }
                     if (com.args.Length == 0) { message = GetTakeNoArgs(); } else {

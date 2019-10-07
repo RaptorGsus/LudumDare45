@@ -20,7 +20,7 @@ public class UnlockManager : Singleton<UnlockManager>
     private static bool attack = false;
     private static bool backpack = false;
 
-    public static GraphicsLevel graphics = GraphicsLevel.Low;
+    public GraphicsLevel graphics = GraphicsLevel.Low;
 
     public bool Take {
         get {
@@ -76,6 +76,8 @@ public class UnlockManager : Singleton<UnlockManager>
         }
     }
 
+    public GraphicsLevel Graphics { get => graphics; }
+
     public void UnlockHands()
     {
         take = true;
@@ -106,20 +108,38 @@ public class UnlockManager : Singleton<UnlockManager>
         attack = true;
     }
 
+    bool toggle1 = false;
+    bool toggle2 = false;
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Tab)) {
-            TextAdventureConsole.Instance.WriteLine("All commands unlocked.");
-            take =      true;
-            drop =      true;
-            look =      true;
-            move =      true;
-            read =      true;
-            use =       true;
-            open =      true;
-            attack =    true;
-            backpack =  true;
+        if (Input.GetKeyDown(KeyCode.Alpha1)) {
+            toggle1 = !toggle1;
+            if(toggle1) {
+                TextAdventureConsole.Instance.WriteLine("All commands unlocked.");
+            } else {
+                TextAdventureConsole.Instance.WriteLine("All commands locked.");
+            }
+            take =      toggle1;
+            drop =      toggle1;
+            look =      toggle1;
+            move =      toggle1;
+            read =      toggle1;
+            use =       toggle1;
+            open =      toggle1;
+            attack =    toggle1;
         }
+        
+        if(Input.GetKeyDown(KeyCode.Alpha2)) {
+            toggle2 = !toggle2;
+            if(toggle2) {
+                TextAdventureConsole.Instance.WriteLine("Inventory Expanded!");
+            } else {
+                TextAdventureConsole.Instance.WriteLine("Inventory Locked!");
+            }
+            backpack = toggle2;
+        }
+
+
     }
 
 
