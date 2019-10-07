@@ -33,11 +33,19 @@ namespace TextAdventure {
 
             switch (com.type) {
                 case Command.InteractionType.Take:
+                    if (!UnlockManager.Instance.Take) {
+                        message = "Unknown Command 405";
+                        break;
+                    }
                     if (com.args.Length == 0) { message = GetTakeNoArgs(); } else {
                         message = CurrentRoom.PassCommand(com);
                     }
                     break;
                 case Command.InteractionType.Drop:
+                    if (!UnlockManager.Instance.Drop) {
+                        message = "Unknown Command 405";
+                        break;
+                    }
                     if (Inventory.Count == 0) {
                         message = "You aren't holding anything";
                         break;
@@ -52,6 +60,10 @@ namespace TextAdventure {
                     }
                     break;
                 case Command.InteractionType.Look:
+                    if (!UnlockManager.Instance.Look) {
+                        message = "Unknown Command 405";
+                        break;
+                    }
                     if (com.args.Length == 0 || com.args.Contains("room", StringComparer.OrdinalIgnoreCase)) {
                         message = CurrentRoom.Interactables.Count() <= 1 ?
                             CurrentRoom.description + "\nThe Room is empty." :
@@ -62,6 +74,10 @@ namespace TextAdventure {
                     }
                     break;
                 case Command.InteractionType.Move:
+                    if (!UnlockManager.Instance.Move) {
+                        message = "Unknown Command 405";
+                        break;
+                    }
                     if (com.args.Length == 0) {
                         var validDirs = CurrentRoom.ListDoors();
                         message = "There are " + validDirs.Length + " Doors in this room\n +" + String.Join("\n +", validDirs);
@@ -70,6 +86,10 @@ namespace TextAdventure {
                     }
                     break;
                 case Command.InteractionType.Read:
+                    if (!UnlockManager.Instance.Read) {
+                        message = "Unknown Command 405";
+                        break;
+                    }
                     if (com.args.Length == 0) {
                         message = GetReadNoArgs();
                     } else {
@@ -77,6 +97,10 @@ namespace TextAdventure {
                     }
                     break;
                 case Command.InteractionType.Use:
+                    if (!UnlockManager.Instance.Use) {
+                        message = "Unknown Command 405";
+                        break;
+                    }
                     if (com.args.Length == 0) {
                         message = "Typically, you use an object, but don't let me tell you how to live your life...";
                     } else {
@@ -84,6 +108,10 @@ namespace TextAdventure {
                     }
                     break;
                 case Command.InteractionType.Open:
+                    if (!UnlockManager.Instance.Open) {
+                        message = "Unknown Command 405";
+                        break;
+                    }
                     if (com.args.Length == 0) {
                         message = "What do you want to open?";
                     } else {
@@ -91,6 +119,10 @@ namespace TextAdventure {
                     }
                     break;
                 case Command.InteractionType.Attack:
+                    if (!UnlockManager.Instance.Attack) {
+                        message = "Unknown Command 405";
+                        break;
+                    }
                     if (com.args.Length == 0) {
                         message = "You swing your sword wildly making everyone *very* uncomfortable.";
                     } else {
@@ -98,7 +130,7 @@ namespace TextAdventure {
                     }
                     break;
                 case Command.InteractionType.Invalid:
-                    message = ("You can't do that.");
+                    message = ("Unknown command.");
                     break;
                 default:
                     message = "Unk.";
